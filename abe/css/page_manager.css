@@ -1,0 +1,14 @@
+body{
+  background-color: #f1f1fb;
+  background-image:none;
+}
+.manager_word_wrapper{
+  text-align: center;
+  padding-right: 25%;
+  padding-bottom: 40px;
+  padding-top: 5px;
+}
+.manager_word{
+  display: inline-block;
+  text-align: left;
+}

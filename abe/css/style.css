@@ -2,6 +2,13 @@
   text-align : center;
   margin-left:auto;
   margin-right:auto;
+  padding-bottom: 20px;
+}
+
+.subpage_title{
+  text-align : center;
+  margin-left:auto;
+  margin-right:auto;
 }
 
 #top_profile{
@@ -72,7 +79,7 @@
   margin-right: auto;
 }
 body{
-  background-image: url("images.png");
+  background-image: url("../images/images.png");
   height: 100vh;
   margin: 0;
 }
@@ -80,7 +87,6 @@ body{
 #title{
   margin:0;
   padding-top: 50px;
-  padding-bottom: 20px;
 }
 
 .ul_none{
@@ -90,33 +96,10 @@ body{
 .ul_none li{
   padding-top: 3px
 }
-.padding-left_10{
+.padding-left_50{
   padding-left: 50px;
 }
 
 .padding-bottom_20{
   padding-bottom: 20px;
-}
-
-
-.color_pink{
-  color:#FFABCE;
-}
-.color_light_green{
-  color:#AEFFBD;
-}
-.color_light_blue{
-  color:#A7F1FF;
-}
-.color_sky_blue{
-  color:#5D99FF;
-}
-.color_blue{
-  color:#005FFF;
-}
-.color_dark_blue{
-  color:#000099;
-}
-.color_purple{
-  color:#FF22FF;
 }
