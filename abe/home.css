@@ -1,0 +1,51 @@
+#contents-modal{
+  float:left;
+  padding-top: 4vh;
+  background-color: #f1f1fb;
+  height: 96vh;
+  max-width: 18%;
+  width: 18%;
+  border-right-width: medium;
+  border-color: #999;
+  resize: horizontal;
+  z-index:3;
+  position:absolute;
+}
+
+#contents-modal div{
+  padding-top: 4.5%;
+  padding-left: 10%;
+}
+
+#main{
+  width: 82%;
+  max-width: 82%;
+  margin-left: 18%;
+  height: 100vh;
+}
+body{
+  height: 100vh;
+  margin: 0;
+}
+
+.color_pink{
+  color:#FFABCE;
+}
+.color_light_green{
+  color:#98fb98;
+}
+.color_light_blue{
+  color:#00ffff;
+}
+.color_sky_blue{
+  color:#5D99FF;
+}
+.color_blue{
+  color:#005FFF;
+}
+.color_dark_blue{
+  color:#000099;
+}
+.color_purple{
+  color:#FF22FF;
+}
