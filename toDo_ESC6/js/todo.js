@@ -15,12 +15,14 @@ window.onload = function () {
     }
     addToDoList();
   }
+  //todoリストに入力内容を追加する
   function addToDoList(){
       if(input_todo.value == ""){
         return false;
       }
       todo_num++;
 
+      //tableに追加するタグを生成
       var tr = document.createElement("TR");
       var td_check = document.createElement("TD");
       var td_text = document.createElement("TD");
@@ -41,7 +43,7 @@ window.onload = function () {
       btn.value = todo_num;
       btn.onclick = deleteTodo(todo_num);
 
-      //整形
+      //整形してtodoリストに追加
       td_check.appendChild(chk);
       td_text.appendChild(todo_text);
       td_text.appendChild(btn);
@@ -49,12 +51,10 @@ window.onload = function () {
       tr.appendChild(td_text);
       todo_list.appendChild(todo_tr);
 
-      //input_todoの内容を
+      //todoの入力をリセット
       input_todo.value = "";
-
-      if(todo_num > 0){
-          setAllCheckBtn(false);
-      }
+      //todo_listの数が１個以上になるので、全チェックボタンを有効に
+      setAllCheckBtn(true);
   }
 
   function deleteTodo(number){
@@ -64,7 +64,7 @@ window.onload = function () {
       if(flg){
 
       }else{
-        
+
       }
   }
 };
