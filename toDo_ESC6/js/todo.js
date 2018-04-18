@@ -161,4 +161,24 @@ window.onload = function () {
             }
         }
     }
+
+    /***表示内容変更ボタン関連***/
+    var change_display_all_btn    = document.getElementById("change_display_all_btn");
+    var change_display_active_btn = document.getElementById("change_display_active_btn");
+    var change_display_comp_btn   = document.getElementById("change_display_completed_btn");
+    var comp_clear_btn            = document.getElementById("completed_clear_btn");
+    //activeとcompletedのリストを見てtrの表示を変えるだけ。簡単
+    function change_display_all(){
+
+    }
+    function change_display_active(){
+
+    }
+    function change_display_completed(){
+
+    }
+    //completedのリストを見て、削除を行うだけ。簡単
+    function change_display_clear(){
+
+    }
 };
