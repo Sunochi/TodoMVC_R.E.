@@ -4,8 +4,9 @@
 
 
 window.onload = function () {
-    let todo_num   = 0; //現在のTodoの数
+    let todo_num   = 0; //現在のTodoの数(allで表示される数)
     let todo_count = 1; //今までのTodoの数（主Key）
+    let active_num = 0; //activeの数
 
     // 常に使用しそうなDOMは最初に用意しておく
     var input_todo    = document.getElementById("input_todo");
@@ -70,10 +71,12 @@ window.onload = function () {
         tr.appendChild(td_text);
         todo_list.appendChild(tr);
 
-        //todoの入力をリセット,todoの数の管理
+        //todoの入力をリセット,アクティブリストへの追加,todo数の管理
         input_todo.value = "";
+        active_list.add(todo_count);
         todo_num++;
         todo_count++;
+        active_num++;
         //todo_listの数が必ず１個以上になるので、全チェックボタンとフッターを有効に
         setCheckBoxforAll(true);
         setTodoFooter(true);
@@ -96,6 +99,7 @@ window.onload = function () {
         var target_tr = document.getElementById("todo_" + this.value);
         target_tr.remove();
         todo_num--;
+        //表示する内容が１件もない
         if(todo_num === 0){
             setAllCheckBox(false);
             setTodoFooter(false);
@@ -111,7 +115,7 @@ window.onload = function () {
 
     //テーブルのフッターの整形/表示・非表示
     function setTodoFooter(flg){
-        footer_text.innerHTML = "" + todo_num + " items left";
+        footer_text.innerHTML = "" + active_num + " items left";
         if(flg){
             todo_footer.style.display = "";
         }else{
