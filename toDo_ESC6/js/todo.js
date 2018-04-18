@@ -19,6 +19,7 @@ window.onload = function () {
     var active_list    = [];
     var completed_list = [];
 
+    all_check_box.addEventListener("change", allchecked);
     //todoの入力のイベント
     input_todo.addEventListener("keypress", onKeyPress);
     input_todo.addEventListener("blur", addToDoList);
@@ -31,7 +32,7 @@ window.onload = function () {
         addToDoList();
     }
 
-    //todoリストに入力内容を追加する
+    //todoリストに入力内容を追加する。保存から復元する関数と類似した部分は別関数にする。
     function addToDoList(){
         if(input_todo.value == ""){
             return false;
@@ -47,9 +48,10 @@ window.onload = function () {
 
         //todoのチェックボタン作成
         var chk   = document.createElement("INPUT");
-        chk.value = "todo_" + todo_count;
+        chk.value = todo_count;
         chk.setAttribute("type", "checkbox");
         chk.setAttribute('name', 'todo_check');
+        chk.addEventListener('change', changeTodoStatus);
 
         //todoの内容のテキストの作成
         var todo_text       = document.createElement("SPAN");
@@ -73,13 +75,13 @@ window.onload = function () {
 
         //todoの入力をリセット,アクティブリストへの追加,todo数の管理
         input_todo.value = "";
-        active_list.add(todo_count);
+        active_list.push(todo_count);
         todo_num++;
         todo_count++;
         active_num++;
         //todo_listの数が必ず１個以上になるので、全チェックボタンとフッターを有効に
-        setCheckBoxforAll(true);
-        setTodoFooter(true);
+        setCheckBoxforAll();
+        setTodoFooter();
     }
 
     //Todoの行にマウスオーバーした時の削除ボタンの表示
@@ -99,27 +101,64 @@ window.onload = function () {
         var target_tr = document.getElementById("todo_" + this.value);
         target_tr.remove();
         todo_num--;
+
         //表示する内容が１件もない
         if(todo_num === 0){
-            setAllCheckBox(false);
-            setTodoFooter(false);
-        }else{
-            setTodoFooter(true);
+            setCheckBoxforAll();
         }
+        setTodoFooter();
     }
 
     //全チェックボタンの表示・非表示の切り替え
-    function setCheckBoxforAll(flg){
-        all_check_box.disabled = !flg;
+    function setCheckBoxforAll(){
+        all_check_box.disabled = (active_num > 0) ? false:true;
     }
 
     //テーブルのフッターの整形/表示・非表示
-    function setTodoFooter(flg){
+    function setTodoFooter(){
         footer_text.innerHTML = "" + active_num + " items left";
-        if(flg){
+        if(todo_num > 0){
             todo_footer.style.display = "";
         }else{
             todo_footer.style.display = "none";
+        }
+    }
+
+    function allchecked(){
+      var checked = this.checked;
+      var checkboxes = document.getElementsByName("todo_check");
+      checkboxes.forEach(function(cb){
+          if(cb.checked != checked){
+              cb.checked = checked;
+              changeStatus(cb);
+          }
+      });
+      setTodoFooter();
+    }
+
+    function changeTodoStatus(){
+        changeStatus(this);
+        setTodoFooter();
+    }
+
+    function changeStatus(checkbox){
+        var todo_number = checkbox.value;
+        if(checkbox.checked){
+            active_list.some(function(v, i){
+                if (v==todo_number){
+                    active_list.splice(i,1);
+                    active_num--;
+                }
+            });
+            completed_list.push(todo_number);
+        }else{
+            completed_list.some(function(v, i){
+                if (v==todo_number) completed_list.splice(i,1);
+            });
+            if(active_list.indexOf(todo_number) == -1){
+                active_list.push(todo_number);
+                active_num++;
+            }
         }
     }
 };
