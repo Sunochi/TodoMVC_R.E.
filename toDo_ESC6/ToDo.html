@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>todos</title>
+    <!--<link rel="stylesheet" type="text/css" href="css/home.css">-->
+    <script type="text/javascript" src="js/todo.js"></script>
+  </head>
+  <body>
+    <h1>todos</h1>
+    <table name="todo_table">
+        <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" name="all_check" id="all_check" disabled/>
+                </th>
+                <th>
+                    <input type="text" name="input_todo" id="input_todo" value="" placeholder="What needs to be done?"></input>
+                </th>
+            </tr>
+        </thead>
+        <tbody name="todo_list" id="todo_list">
+        </tbody>
+        <tfoot name="todo_footer" id="todo_footer">
+            <tr id="under_text" hidden>
+                <td colspan="2">
+                    <span>1 items left</span>
+                    <button type="button" onclick="change_display_all">All</button>
+                    <button type="button" onclick="change_display_active">Active</button>
+                    <button type="button" onclick="change_display_completed">Completed</button>
+                    <button type="button" onclick="change_display_clear">Clear completed</button>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+  </body>
