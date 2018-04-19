@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>todos</title>
+    <!--<link rel="stylesheet" type="text/css" href="css/home.css">-->
+    <script type="text/javascript" src="js/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/underscore/underscore.js"></script>
+    <script type="text/javascript" src="js/backbone/backbone.js"></script>
+  </head>
+
+  <body>
+    <div id="todoapp">
+    <header>
+      <h1>Todos</h1>
+      <input id="new-todo" type="text" placeholder="What needs to be done?">
+    </header>
+
+    <section id="main">
+      <input id="toggle-all" type="checkbox">
+      <label for="toggle-all">Mark all as complete</label>
+      <ul id="todo-list"></ul>
+    </section>
+
+    <footer>
+      <a id="clear-completed">Clear completed</a>
+      <div id="todo-count"></div>
+    </footer>
+
+    </div>
+    
+    <script type="text/javascript" src="js/backbone/todo.js"></script>
+    <script type="text/template" id="task-template">
+        <tr>
+          <td>
+              <span class="name"><%= name %></span>
+          </td>
+          <td>
+              <span class="text"><%= text %></span>
+          </td>
+        </tr>
+    </script>
+  </body>
