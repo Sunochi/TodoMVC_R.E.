@@ -1,5 +1,6 @@
 /********************************
 @TODO 保存の動作対応 2018/04/18 簾内
+@TODO comp_clear_btnの実装　2018/04/19 すのうち
 *********************************/
 
 
@@ -221,8 +222,6 @@ window.onload = function () {
         checkboxes.forEach(function(cb){
             var tr_id = "todo_" + cb.value;
             var todo_tr = document.getElementById(tr_id);
-            console.log(active_list);
-            console.log(cb.value);
             if(active_list.indexOf(cb.value) > -1 && ((view_content & 1) > 0)){
                 todo_tr.style.display = "";
             }else if(completed_list.indexOf(cb.value) > -1 && ((view_content & 2) > 0)){
