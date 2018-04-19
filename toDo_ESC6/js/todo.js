@@ -4,9 +4,13 @@
 
 
 window.onload = function () {
+    const disp_all    = 3;
+    const disp_active = 1;
+    const disp_comp   = 2;
     let todo_num   = 0; //現在のTodoの数(allで表示される数)
     let todo_count = 1; //今までのTodoの数（主Key）
     let active_num = 0; //activeの数
+    let view_content = disp_all; //表示するコンテンツの切り替え用。"all":3, "active":1, "complete":2
 
     // 常に使用しそうなDOMは最初に用意しておく
     var input_todo    = document.getElementById("input_todo");
@@ -14,6 +18,12 @@ window.onload = function () {
     var todo_footer   = document.getElementById("todo_footer");
     var footer_text   = document.getElementById("items_left_text");
     var all_check_box = document.getElementById("all_check");
+
+    /***表示内容変更ボタン関連***/
+    var change_display_all_btn    = document.getElementById("change_display_all_btn");
+    var change_display_active_btn = document.getElementById("change_display_active_btn");
+    var change_display_comp_btn   = document.getElementById("change_display_completed_btn");
+    var comp_clear_btn            = document.getElementById("completed_clear_btn");
 
     //リストの表示を変更する用。主Keyを保存しておく
     var active_list    = [];
@@ -75,7 +85,7 @@ window.onload = function () {
 
         //todoの入力をリセット,アクティブリストへの追加,todo数の管理
         input_todo.value = "";
-        active_list.push(todo_count);
+        active_list.push(chk.value);
         todo_num++;
         todo_count++;
         active_num++;
@@ -99,6 +109,16 @@ window.onload = function () {
     //削除ボタンを押した際の動作
     function deleteTodo(){
         var target_tr = document.getElementById("todo_" + this.value);
+        var todo_number = this.value;
+        active_list.some(function(v, i){
+            if (v==todo_number){
+                active_list.splice(i,1);
+                active_num--;
+            }
+        });
+        completed_list.some(function(v, i){
+            if (v==this.value) completed_list.splice(i,1);
+        });
         target_tr.remove();
         todo_num--;
 
@@ -114,6 +134,10 @@ window.onload = function () {
         all_check_box.disabled = (active_num > 0) ? false:true;
     }
 
+    function changeCheckBoxforAll(){
+        all_check_box.checked = (active_list.length > 0) ? false :true;
+    }
+
     //テーブルのフッターの整形/表示・非表示
     function setTodoFooter(){
         footer_text.innerHTML = "" + active_num + " items left";
@@ -121,6 +145,11 @@ window.onload = function () {
             todo_footer.style.display = "";
         }else{
             todo_footer.style.display = "none";
+        }
+        if(completed_list.length > 0){
+            comp_clear_btn.style.display = "";
+        }else{
+            comp_clear_btn.style.display = "none";
         }
     }
 
@@ -134,11 +163,14 @@ window.onload = function () {
           }
       });
       setTodoFooter();
+      view();
     }
 
     function changeTodoStatus(){
         changeStatus(this);
         setTodoFooter();
+        changeCheckBoxforAll();
+        view();
     }
 
     function changeStatus(checkbox){
@@ -162,23 +194,46 @@ window.onload = function () {
         }
     }
 
-    /***表示内容変更ボタン関連***/
-    var change_display_all_btn    = document.getElementById("change_display_all_btn");
-    var change_display_active_btn = document.getElementById("change_display_active_btn");
-    var change_display_comp_btn   = document.getElementById("change_display_completed_btn");
-    var comp_clear_btn            = document.getElementById("completed_clear_btn");
+    change_display_all_btn.addEventListener("click",change_display_all);
+    change_display_active_btn.addEventListener("click",change_display_active);
+    change_display_comp_btn.addEventListener("click",change_display_completed);
+    comp_clear_btn.addEventListener("click",change_display_clear);
     //activeとcompletedのリストを見てtrの表示を変えるだけ。簡単
     function change_display_all(){
-
+        view_content = disp_all;
+        view()
     }
     function change_display_active(){
-
+        view_content = disp_active;
+        view()
     }
     function change_display_completed(){
-
+        view_content = disp_comp;
+        view()
     }
     //completedのリストを見て、削除を行うだけ。簡単
     function change_display_clear(){
 
     }
+
+    function view(){
+        var checkboxes = document.getElementsByName("todo_check");
+        checkboxes.forEach(function(cb){
+            var tr_id = "todo_" + cb.value;
+            var todo_tr = document.getElementById(tr_id);
+            console.log(active_list);
+            console.log(cb.value);
+            if(active_list.indexOf(cb.value) > -1 && ((view_content & 1) > 0)){
+                todo_tr.style.display = "";
+            }else if(completed_list.indexOf(cb.value) > -1 && ((view_content & 2) > 0)){
+                todo_tr.style.display = "";
+            }else{
+                todo_tr.style.display = "none";
+            }
+        });
+    }
+
+    setTodoFooter();
+    change_display_clear();
+    view();
 };
