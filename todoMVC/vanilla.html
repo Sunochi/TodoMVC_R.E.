@@ -4,11 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>todos</title>
     <!--<link rel="stylesheet" type="text/css" href="css/home.css">-->
-    <script type="text/javascript" src="js/jquery/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="js/underscore/underscore.js"></script>
-    <script type="text/javascript" src="js/backbone/backbone.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/todo_vanilla.js"></script>
+    <script rel="stylesheet" src="css/todo_style.css"></script>
   </head>
-
   <body>
     <h1>todos</h1>
     <table name="todo_table">
@@ -17,8 +16,8 @@
                 <th>
                     <input type="checkbox" name="all_check" id="all_check" disabled/>
                 </th>
-                <th class="input_todo">
-                    <input type="button"  name="input_todo" id="input_todo" value="" placeholder="What needs to be done?"><span>ssss</span></input>
+                <th>
+                    <input type="text" name="input_todo" id="input_todo" value="" placeholder="What needs to be done?"></input>
                 </th>
             </tr>
         </thead>
@@ -36,15 +35,4 @@
             </tr>
         </tfoot>
     </table>
-    <script type="text/javascript" src="js/backbone/todo.js"></script>
-    <script type="text/template" id="task-template">
-        <tr>
-          <td>
-              <span class="name"><%= name %></span>
-          </td>
-          <td>
-              <span class="text"><%= text %></span>
-          </td>
-        </tr>
-    </script>
   </body>

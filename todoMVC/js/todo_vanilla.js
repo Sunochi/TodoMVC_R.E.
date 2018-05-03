@@ -1,19 +1,5 @@
-/********************************
-@TODO 保存の動作対応 2018/04/18 簾内
-@TODO comp_clear_btnの実装　2018/04/19 すのうち
-*********************************/
-
-
 window.onload = function () {
-    const disp_all    = 3;
-    const disp_active = 1;
-    const disp_comp   = 2;
-    let todo_num   = 0; //現在のTodoの数(allで表示される数)
-    let todo_count = 1; //今までのTodoの数（主Key）
-    let active_num = 0; //activeの数
-    let view_content = disp_all; //表示するコンテンツの切り替え用。"all":3, "active":1, "complete":2
-
-    // 常に使用しそうなDOMは最初に用意しておく
+    // 常に使用しそうなDOMは最初に用意
     var input_todo    = document.getElementById("input_todo");
     var todo_list     = document.getElementById("todo_list");
     var todo_footer   = document.getElementById("todo_footer");
@@ -26,12 +12,87 @@ window.onload = function () {
     var change_display_comp_btn   = document.getElementById("change_display_completed_btn");
     var comp_clear_btn            = document.getElementById("completed_clear_btn");
 
+    /***************************************************
+        ローカルストレージから保存したデータを復元する
+    ****************************************************/
+    const disp_all    = 3;
+    const disp_active = 1;
+    const disp_comp   = 2;
+    let todo_num   = 0; //現在の全てのTodoの数
+    let todo_count = 1; //今までのTodoの数（保存時のKey）
+    let active_num = 0; //active状態の数
+    let view_content = disp_all; //表示するコンテンツの切り替え。"all":3, "active":1, "complete":2
+
     //リストの表示を変更する用。主Keyを保存しておく
     var active_list    = [];
     var completed_list = [];
 
+    if(localStorage.getItem('todo_count')){
+        todo_count = localStorage.getItem('todo_count');
+        setTodo(todo_count);
+        setCheckBoxforAll();
+        if(todo_num > 0){
+            changeCheckBoxforAll();
+        }
+    }
+
+    function setTodo(num){
+        for(i = 1; i < num; i++ ){
+            //tableに追加するタグを生成
+            if(!localStorage.getItem('' + i)){
+                continue;
+            }
+            var data = JSON.parse(localStorage.getItem(""+i));
+            var tr       = document.createElement("TR");
+            var td_check = document.createElement("TD");
+            var td_text  = document.createElement("TD");
+            tr.id   = "todo_" + i;
+            tr.name = "todo";
+            tr.addEventListener("mouseover", indicateBtn);
+            tr.addEventListener("mouseout", hiddenBtn);
+
+            //todoのチェックボタン作成
+            var chk   = document.createElement("INPUT");
+            chk.value = i;
+            chk.setAttribute("type", "checkbox");
+            chk.setAttribute('name', 'todo_check');
+            chk.addEventListener('change', changeTodoStatus);
+            if(data["checked"] == 1){
+                chk.checked = true;
+                completed_list.push(chk.value);
+            }else{
+                active_list.push(chk.value);
+                active_num++;
+            }
+
+            todo_num++;
+            //todoの内容のテキストの作成
+            var todo_text       = document.createElement("SPAN");
+            todo_text.innerHTML = data["text"];
+
+            //todoを削除するボタンの作成
+            var btn   = document.createElement("BUTTON");
+            btn.value = i;
+            btn.name  = "todo_" + i;
+            btn.setAttribute("type", "button");
+            btn.addEventListener('click',deleteTodo);
+            btn.style.display = "none";
+
+            //整形してtodoリストに追加
+            td_check.appendChild(chk);
+            td_text.appendChild(todo_text);
+            td_text.appendChild(btn);
+            tr.appendChild(td_check);
+            tr.appendChild(td_text);
+            todo_list.appendChild(tr);
+        }
+    }
+
+    /***************************************************
+        TODOリストの挙動と表示
+    ****************************************************/
+
     all_check_box.addEventListener("change", allchecked);
-    //todoの入力のイベント
     input_todo.addEventListener("keypress", onKeyPress);
     input_todo.addEventListener("blur", addToDoList);
 
@@ -43,7 +104,7 @@ window.onload = function () {
         addToDoList();
     }
 
-    //todoリストに入力内容を追加する。保存から復元する関数と類似した部分は別関数にする。
+    //リストに入力内容を追加する。
     function addToDoList(){
         if(input_todo.value == ""){
             return false;
@@ -85,14 +146,22 @@ window.onload = function () {
         todo_list.appendChild(tr);
 
         //todoの入力をリセット,アクティブリストへの追加,todo数の管理
+        var data = {
+            text: input_todo.value,
+            checked: 0
+        }
+        localStorage.setItem(''+todo_count, JSON.stringify(data));
         input_todo.value = "";
         active_list.push(chk.value);
         todo_num++;
         todo_count++;
         active_num++;
+        localStorage.setItem("todo_count", ''+todo_count);
         //todo_listの数が必ず１個以上になるので、全チェックボタンとフッターを有効に
         setCheckBoxforAll();
         setTodoFooter();
+        changeCheckBoxforAll();
+        view();
     }
 
     //Todoの行にマウスオーバーした時の削除ボタンの表示
@@ -120,11 +189,14 @@ window.onload = function () {
         completed_list.some(function(v, i){
             if (v==this.value) completed_list.splice(i,1);
         });
+        localStorage.removeItem(""+this.value);
         target_tr.remove();
         todo_num--;
 
         //表示する内容が１件もない
         if(todo_num === 0){
+            localStorage.clear();
+            todo_count = 1;
             setCheckBoxforAll();
         }
         setTodoFooter();
@@ -132,7 +204,7 @@ window.onload = function () {
 
     //全チェックボタンの表示・非表示の切り替え
     function setCheckBoxforAll(){
-        all_check_box.disabled = (active_num > 0) ? false:true;
+        all_check_box.disabled = (todo_num > 0) ? false:true;
     }
 
     function changeCheckBoxforAll(){
@@ -193,6 +265,9 @@ window.onload = function () {
                 active_num++;
             }
         }
+        var data = JSON.parse(localStorage.getItem(""+todo_number));
+        data["checked"] = checkbox.checked ? 1 : 0;
+        localStorage.setItem(''+todo_number, JSON.stringify(data));
     }
 
     change_display_all_btn.addEventListener("click",change_display_all);
@@ -214,7 +289,25 @@ window.onload = function () {
     }
     //completedのリストを見て、削除を行うだけ。簡単
     function change_display_clear(){
+      completed_list.forEach(function(v, i){
+          var target_tr = document.getElementById("todo_" + v);
+          localStorage.removeItem(''+v);
+          target_tr.remove();
+          todo_num--;
+      });
+      completed_list = [];
 
+      //表示する内容が１件もない
+      if(todo_num === 0){
+          setCheckBoxforAll();
+          all_check_box.checked = false;
+          localStorage.clear();
+          todo_count = 1;
+      }else{
+          changeCheckBoxforAll();
+      }
+      setTodoFooter();
+      view();
     }
 
     function view(){
@@ -233,6 +326,6 @@ window.onload = function () {
     }
 
     setTodoFooter();
-    change_display_clear();
+    change_display_all();
     view();
 };
