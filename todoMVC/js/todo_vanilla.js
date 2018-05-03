@@ -56,6 +56,7 @@ window.onload = function () {
             chk.value = i;
             chk.setAttribute("type", "checkbox");
             chk.setAttribute('name', 'todo_check');
+            chk.setAttribute('class', 'check_box');
             chk.addEventListener('change', changeTodoStatus);
             if(data["checked"] == 1){
                 chk.checked = true;
@@ -67,14 +68,16 @@ window.onload = function () {
 
             todo_num++;
             //todoの内容のテキストの作成
-            var todo_text       = document.createElement("SPAN");
+            var todo_text       = document.createElement("LABEL");
             todo_text.innerHTML = data["text"];
+            todo_text.setAttribute('class', 'todo_text');
 
             //todoを削除するボタンの作成
             var btn   = document.createElement("BUTTON");
             btn.value = i;
             btn.name  = "todo_" + i;
             btn.setAttribute("type", "button");
+            btn.setAttribute("class", "delete_btn");
             btn.addEventListener('click',deleteTodo);
             btn.style.display = "none";
 
@@ -104,9 +107,28 @@ window.onload = function () {
         addToDoList();
     }
 
+    function escape_html (string) {
+        if(typeof string !== 'string') {
+            return string;
+        }
+        return string.replace(/[&'`"<>]/g, function(match) {
+            return {
+              '&': '&amp;',
+              "'": '&#x27;',
+              '`': '&#x60;',
+              '"': '&quot;',
+              '<': '&lt;',
+              '>': '&gt;',
+            }[match]
+        });
+    }
+
     //リストに入力内容を追加する。
     function addToDoList(){
-        if(input_todo.value == ""){
+        var text_val = input_todo.value;
+        text_val = text_val.replace(/(^(\s|　)+)|((\s|　)+$)/g, "");
+        text_val = escape_html(text_val);
+        if(text_val == ""){
             return false;
         }
         //tableに追加するタグを生成
@@ -123,17 +145,20 @@ window.onload = function () {
         chk.value = todo_count;
         chk.setAttribute("type", "checkbox");
         chk.setAttribute('name', 'todo_check');
+        chk.setAttribute('class', 'check_box')
         chk.addEventListener('change', changeTodoStatus);
 
         //todoの内容のテキストの作成
-        var todo_text       = document.createElement("SPAN");
-        todo_text.innerHTML = input_todo.value;
+        var todo_text       = document.createElement("LABEL");
+        todo_text.innerHTML = text_val;
+        todo_text.setAttribute('class', 'todo_text');
 
         //todoを削除するボタンの作成
         var btn   = document.createElement("BUTTON");
         btn.value = todo_count;
         btn.name  = "todo_" + todo_count;
         btn.setAttribute("type", "button");
+        btn.setAttribute("class", "delete_btn");
         btn.addEventListener('click',deleteTodo);
         btn.style.display = "none";
 
@@ -276,17 +301,27 @@ window.onload = function () {
     comp_clear_btn.addEventListener("click",change_display_clear);
     //activeとcompletedのリストを見てtrの表示を変えるだけ。簡単
     function change_display_all(){
+        remove_attribute_active();
+        change_display_all_btn.setAttribute("class","active");
         view_content = disp_all;
+        change_display_all_btn.blur();
         view()
     }
     function change_display_active(){
+        remove_attribute_active();
+        change_display_active_btn.setAttribute("class","active");
         view_content = disp_active;
+        change_display_active_btn.blur();
         view()
     }
     function change_display_completed(){
+        remove_attribute_active();
+        change_display_comp_btn.setAttribute("class","active");
         view_content = disp_comp;
+        change_display_comp_btn.blur();
         view()
     }
+
     //completedのリストを見て、削除を行うだけ。簡単
     function change_display_clear(){
       completed_list.forEach(function(v, i){
@@ -308,6 +343,12 @@ window.onload = function () {
       }
       setTodoFooter();
       view();
+    }
+
+    function remove_attribute_active(){
+        change_display_comp_btn.setAttribute("class","");
+        change_display_all_btn.setAttribute("class","");
+        change_display_active_btn.setAttribute("class","");
     }
 
     function view(){

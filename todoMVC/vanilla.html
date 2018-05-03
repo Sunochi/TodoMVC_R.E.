@@ -10,10 +10,10 @@
   </head>
   <body>
     <h1>todos</h1>
-    <table name="todo_table">
+    <table name="todo_table" id="todo_table">
         <thead>
             <tr>
-                <th>
+                <th class="check_box">
                     <input type="checkbox" name="all_check" id="all_check" disabled/>
                 </th>
                 <th>
@@ -27,7 +27,7 @@
             <tr id="todo_footer" style="display:none;">
                 <td colspan="2">
                     <span id="items_left_text">1 items left</span>
-                    <button type="button" id="change_display_all_btn">All</button>
+                    <button type="button" id="change_display_all_btn" class="active">All</button>
                     <button type="button" id="change_display_active_btn">Active</button>
                     <button type="button" id="change_display_completed_btn">Completed</button>
                     <button type="button" id="completed_clear_btn">Clear completed</button>
@@ -35,4 +35,8 @@
             </tr>
         </tfoot>
     </table>
+    <footer>
+      <a href="https://umamusume.jp/" target="_blank"><img src="img/uma.png" width="200px" height="50px"></a><br>
+      <p>COPYRIGHT &#169; T.S ALL RIGHTS RESERVED.	</p>
+    </footer>
   </body>
