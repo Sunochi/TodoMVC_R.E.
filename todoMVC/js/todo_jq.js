@@ -38,9 +38,13 @@ $(document).ready(function(){
             var $chk   = $("<input>").attr({
                 value: i,
                 type: "checkbox",
-                name: 'todo_check',
-                checked: data["checked"]
-            }).on("change",function(){changeTodoStatus();});
+                name: 'todo_check'
+            }).prop("checked",data["checked"] == 1 ? true: false).on("change",function(){
+                var datat = JSON.parse(localStorage.getItem(""+$(this).val()));
+                datat["checked"] = $(this).prop("checked") ? 1 : 0;
+                localStorage.setItem(""+$(this).val(), JSON.stringify(datat));
+                changeTodoStatus();
+            });
 
             //todoの内容のテキストの作成
             var $todo_text = $("<label>").html(data["text"]).on("dblclick", function(){
@@ -57,7 +61,7 @@ $(document).ready(function(){
                     $(tr).after($(input_tr));
                     $(tr).hide();
                     $(input_area).focus().on("blur",function(){
-                        var inputVal = escape_html($(this).val());
+                        var inputVal = escape_html($(this).val()).replace(/(^(\s|　)+)|((\s|　)+$)/g, "");
                         //もし空欄だったら空欄にする前の内容に戻す
                         if(inputVal===''){
                             inputVal = this.defaultValue;
@@ -72,7 +76,7 @@ $(document).ready(function(){
                         $(input_tr).remove();
                     }).on("keypress", function(e){
                         if ( e.keyCode === 13) {
-                            var inputVal = escape_html($(this).val());
+                            var inputVal = escape_html($(this).val()).replace(/(^(\s|　)+)|((\s|　)+$)/g, "");
                             //もし空欄だったら空欄にする前の内容に戻す
                             if(inputVal===''){
                                 inputVal = this.defaultValue;
@@ -102,6 +106,7 @@ $(document).ready(function(){
                 localStorage.removeItem(""+todo_number);
                 $("#todo_"+todo_number).remove();
                 setTodoFooter();
+                changeCheckBoxforAll();
                 setCheckBoxforAll();
             });
 
@@ -133,7 +138,9 @@ $(document).ready(function(){
     $("#all_check").on("change", function(){
         var checked = $(this).prop('checked');
         $.each($("input[name='todo_check']"),function(index, v){
-            
+            var datat = JSON.parse(localStorage.getItem("" + $(v).val()));
+            datat["checked"] = checked ? 1 : 0;
+            localStorage.setItem(""+$(v).val(), JSON.stringify(datat));
             $(v).prop('checked',checked);
         });
         setTodoFooter();
@@ -144,13 +151,16 @@ $(document).ready(function(){
     $("#input_todo").on("keypress", function(e){
         if ( e.keyCode === 13) {
             addToDoList();
+            view();
         }
     }).on("blur", function(){
         addToDoList();
+        view();
     });
 
     function addToDoList(){
-        if(escape_html($("#input_todo").val()) == ""){
+        var input_text = escape_html($("#input_todo").val()).replace(/(^(\s|　)+)|((\s|　)+$)/g, "");
+        if(input_text == ""){
             return false;
         }
         //tableに追加するタグを生成
@@ -167,10 +177,15 @@ $(document).ready(function(){
             value: todo_count,
             type: "checkbox",
             name: 'todo_check'
-        }).on("change",function(){changeTodoStatus();});
+        }).on("change",function(){
+            var datat = JSON.parse(localStorage.getItem(""+$(this).val()));
+            datat["checked"] = $(this).prop("checked") ? 1 : 0;
+            localStorage.setItem(""+$(this).val(), JSON.stringify(datat));
+            changeTodoStatus();
+        });
 
         //todoの内容のテキストの作成
-        var $todo_text = $("<label>").html(escape_html($("#input_todo").val())).on("dblclick", function(){
+        var $todo_text = $("<label>").html(input_text).on("dblclick", function(){
             var tr = $(this).parent().parent();
             var label = this;
             if(!$(tr).hasClass('on')){
@@ -184,7 +199,7 @@ $(document).ready(function(){
                 $(tr).after($(input_tr));
                 $(tr).hide();
                 $(input_area).focus().on("blur",function(){
-                    var inputVal = escape_html($(this).val());
+                    var inputVal = escape_html($(this).val()).replace(/(^(\s|　)+)|((\s|　)+$)/g, "");
                     //もし空欄だったら空欄にする前の内容に戻す
                     if(inputVal===''){
                         inputVal = this.defaultValue;
@@ -199,7 +214,7 @@ $(document).ready(function(){
                     $(input_tr).remove();
                 }).on("keypress", function(e){
                     if ( e.keyCode === 13) {
-                        var inputVal = escape_html($(this).val());
+                        var inputVal = escape_html($(this).val()).replace(/(^(\s|　)+)|((\s|　)+$)/g, "");
                         //もし空欄だったら空欄にする前の内容に戻す
                         if(inputVal===''){
                             inputVal = this.defaultValue;
@@ -230,6 +245,7 @@ $(document).ready(function(){
             $("#todo_"+todo_number).remove();
             setTodoFooter();
             setCheckBoxforAll();
+            changeCheckBoxforAll();
         });
 
         //整形してtodoリストに追加
@@ -238,7 +254,7 @@ $(document).ready(function(){
         $tr.append($td_check,$td_text);
         $("#todo_list").append($tr);
         var data = {
-            text: escape_html($("#input_todo").val()),
+            text: input_text,
             checked: 0
         }
         localStorage.setItem(''+todo_count, JSON.stringify(data));
@@ -261,7 +277,12 @@ $(document).ready(function(){
     }
 
     function changeCheckBoxforAll(){
-        $("#all_check").prop("checked",($("input[name='todo_check']:not(:checked)").length > 0 && $("input[name='todo_check']").length == 0) ? false :true);
+        if($("input[name='todo_check']").length > 0){
+            $("#all_check").prop("checked",($("input[name='todo_check']:not(:checked)").length > 0 )? false :true);
+        }else{
+            $("#all_check").prop("checked", false);
+            localStorage.removeItem("todo_count");
+        }
     }
 
     //テーブルのフッターの整形/表示・非表示
@@ -306,6 +327,7 @@ $(document).ready(function(){
         });
         view();
         setTodoFooter();
+        changeCheckBoxforAll();
         setCheckBoxforAll();
     });
 
@@ -323,5 +345,6 @@ $(document).ready(function(){
     }
 
     setTodoFooter();
+    changeCheckBoxforAll();
     view();
 })
