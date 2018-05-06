@@ -16,7 +16,7 @@ const Task = Backbone.Model.extend({
 });
 
 const TaskList = Backbone.Collection.extend({
-    model: TaskModel,
+    model: Task,
     comparator: "number",
 
     done: function() {
