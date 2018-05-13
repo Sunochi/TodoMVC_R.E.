@@ -4,10 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>todos</title>
     <!--<link rel="stylesheet" type="text/css" href="css/home.css">-->
+    <script type="text/javascript" src="js/jquery/jquery.js"></script>
     <script type="text/javascript" src="js/underscore/underscore.js"></script>
-    <script type="text/javascript" src="js/jquery/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="js/backbone/backbone.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.1.14/backbone.localStorage-min.js"></script>
+    <script type="text/javascript" src="js/backbone/backbone.localStorage.js"></script>
     <link rel="stylesheet" href="css/todo_style.css">
   </head>
 
@@ -38,8 +38,13 @@
             <input type="checkbox" class="todo_chbox" <%= done ? 'checked="checked"' : '' %> />
           </td>
           <td>
-            <label class="todo_text"><%= title %> </label>
-            <button type="button" class="todo_delete" style="display: none;"></button>
+            <div class="view">
+                <label class="todo_text"><%= title %> </label>
+                <button type="button" class="todo_delete" style="display: none;"></button>
+            </div>
+            <div class="edit_text">
+                <input type="text" value="<%= title %>" />
+            </div>
           </td>
         </tr>
     </script>

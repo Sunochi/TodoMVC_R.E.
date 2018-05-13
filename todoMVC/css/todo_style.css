@@ -56,6 +56,19 @@ th{
     cursor: pointer;
 }
 
+#todo_list .edit_text{
+    display: none;
+}
+
+#todo_list .editing .edit_text{
+    display: block;
+}
+
+
+#todo_list .editing .view{
+    display: none;
+}
+
 .todo_text{
     float: left;
     width: 80%;
