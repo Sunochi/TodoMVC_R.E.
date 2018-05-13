@@ -4,10 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>todos</title>
     <!--<link rel="stylesheet" type="text/css" href="css/home.css">-->
-    <script type="text/javascript" src="js/jquery/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="js/underscore/underscore.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="js/backbone/backbone.js"></script>
-    <script type="text/javascript" src="js/todo_backbone.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.1.14/backbone.localStorage-min.js"></script>
     <link rel="stylesheet" href="css/todo_style.css">
   </head>
 
@@ -26,17 +26,6 @@
         </thead>
         <tbody name="todo_list" id="todo_list">
         </tbody>
-        <tfoot name="tfoot" id="tfoot">
-            <tr id="todo_footer" style="display:none;">
-                <td colspan="2">
-                    <span id="items_left_text">1 items left</span>
-                    <button type="button" id="change_display_all_btn" class="active">All</button>
-                    <button type="button" id="change_display_active_btn">Active</button>
-                    <button type="button" id="change_display_completed_btn">Completed</button>
-                    <button type="button" id="completed_clear_btn">Clear completed</button>
-                </td>
-            </tr>
-        </tfoot>
     </table>
     <footer>
       <a href="https://umamusume.jp/" target="_blank"><img src="img/uma.png" width="200px" height="50px"></a><br>
@@ -46,11 +35,26 @@
     <script type="text/template" id="task-template">
         <tr>
           <td>
-              <span class="name"><%= name %></span>
+            <input type="checkbox" class="todo_chbox" <%= done ? 'checked="checked"' : '' %> />
           </td>
           <td>
-              <span class="text"><%= text %></span>
+            <label class="todo_text"><%= title %> </label>
+            <button type="button" class="todo_delete" style="display: none;"></button>
           </td>
         </tr>
     </script>
+    <script type="text/template" id="info-template">
+        <tfoot name="tfoot" id="tfoot">
+            <tr>
+                <td colspan="2">
+                    <span id="items_left_text">1 items left</span>
+                    <button type="button" id="change_display_all_btn" class="active">All</button>
+                    <button type="button" id="change_display_active_btn">Active</button>
+                    <button type="button" id="change_display_completed_btn">Completed</button>
+                    <button type="button" id="completed_clear_btn">Clear completed</button>
+                </td>
+            </tr>
+        </tfoot>
+    </script>
+    <script type="text/javascript" src="js/todo_backbone.js"></script>
   </body>

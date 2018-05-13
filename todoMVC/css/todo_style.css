@@ -45,10 +45,17 @@ th{
   border-spacing : 0px 5px;
 }
 
-.delete_btn{
+#todo_list tr:hover .todo_delete{
+    display: block
+}
+
+#todo_list .todo_delete{
     float: right;
     margin: 3px;
+    display: none;
+    cursor: pointer;
 }
+
 .todo_text{
     float: left;
     width: 80%;
