@@ -28,7 +28,7 @@ $(function(){
         comparator: "key",
 
         done: function() {
-          return this.filter(function(todo){return todo.get('done')});
+          return this.where({done: true});
         },
         remaining: function() {
           return this.where({done: false});
@@ -51,6 +51,7 @@ $(function(){
       initialize: function(){
           this.listenTo(this.model, 'change', this.render);
           this.listenTo(this.model, 'destroy', this.remove);
+          // TODO 表示・非表示切り替えの監視の登録
       },
 
       render: function(){
@@ -83,7 +84,9 @@ $(function(){
               this.model.save({title: value});
               this.$el.removeClass("editing");
           }
-      }
+      },
+
+
     });
 
     // the Root View (controller view)
@@ -95,9 +98,7 @@ $(function(){
           "keypress #input_todo"      : "createOnEnter",
           "click #completed_clear_btn": "clearCompleted",
           "click #all_check"          : "toggleAllCheck",
-          "click #change_display_all_btn"      : "dispAll",
-          "click #change_display_active_btn"   : "dispActive",
-          "click #change_display_completed_btn": "dispComp",
+          // TODO footerの表示・非表示のボタンのイベントの登録
       },
       initialize: function(){
         this.input       = this.$("new-todo");
@@ -106,18 +107,40 @@ $(function(){
         this.listenTo(Todos, 'add', this.addOne);
         this.listenTo(Todos, 'reset', this.addAll);
         this.listenTo(Todos, 'all', this.render);
+        this.listenTo(Todos, 'change:done', this.filterOne);
 
         this.footer = this.$('footer');
         this.main   = $('#todo_list');
         Todos.fetch();
       },
-      addOne: function(){
-
+      addOne: function(todo){
+          var view = new TaskView({model: todo});
+          this.$("#todo_list").append(view.render().el);
       },
+
+      addAll: function(){
+          Todos.each(this.addOne, this);
+      },
+
       render: function(){
+          var done = Todos.done().length;
+          var remaining = Todos.remaining().length;
+          if(Todos.length){
+              this.main.show();
+              this.footer.show();
+              this.footer.html(this.infoTemplate({done: done}))
+          }else{
+              this.main.hide();
+              this.footer.hide();
+          }
 
-      }
+          this.allCheckBox.checked = !remaining;
+      },
 
+      createOnEnter
+      clearCompleted
+      toggleAllCheck
+      filterOne // TODO 表示・非表示のイベントのtrrigerの発火
     })
 
 var pview = new ParentView;
