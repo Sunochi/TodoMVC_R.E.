@@ -51,7 +51,6 @@ $(function(){
       initialize: function(){
           this.listenTo(this.model, 'change', this.render);
           this.listenTo(this.model, 'destroy', this.remove);
-          // TODO 表示・非表示切り替えの監視の登録
       },
 
       render: function(){
@@ -98,7 +97,9 @@ $(function(){
           "keypress #input_todo"      : "createOnEnter",
           "click #completed_clear_btn": "clearCompleted",
           "click #all_check"          : "toggleAllCheck",
-          // TODO footerの表示・非表示のボタンのイベントの登録
+          "click #change_display_all_btn"       : "changeDisplayAll",
+          "click #change_display_active_btn"    : "changeDisplayActive",
+          "click #change_display_completed_btn" : "changeDisplayComp",
       },
       initialize: function(){
         this.input       = this.$("#input_todo");
@@ -107,7 +108,6 @@ $(function(){
         this.listenTo(Todos, 'add', this.addOne);
         this.listenTo(Todos, 'reset', this.addAll);
         this.listenTo(Todos, 'all', this.render);
-        this.listenTo(Todos, 'change:done', this.filterOne);
 
         this.footer = this.$('#footer');
         this.main   = $('#todo_list');
@@ -116,7 +116,8 @@ $(function(){
 
       addOne: function(todo){
           var view = new TaskView({model: todo});
-          this.$("#todo_list").append(view.render().el);
+          this.$el.append(view.render().el);
+          $(".active").trigger('click');
       },
 
       addAll: function(){
@@ -147,15 +148,35 @@ $(function(){
 
       clearCompleted: function(){
           _.invoke(Todos.done(), 'destroy');
+          $(".active").trigger('click');
           return true;
       },
 
       toggleAllCheck: function(){
           var done = this.allCheckBox.checked;
           Todos.each(function (todo){ todo.save({'done':done});});
+          $(".active").trigger('click');
+      },
+      changeDisplayAll: function(){
+          $('tr').show();
+          $('.active').removeClass("active");
+          $('#change_display_all_btn').addClass("active");
       },
 
-      //filterOne // TODO 表示・非表示のイベントのtrrigerの発火
+      changeDisplayActive: function(){
+          this.main.find('tr:not(.done)').show();
+          this.main.find('tr.done').hide();
+          $('.active').removeClass("active");
+          $('#change_display_active_btn').addClass("active");
+      },
+
+      changeDisplayComp: function(){
+          this.main.find('tr:not(.done)').hide();
+          this.main.find('tr.done').show();
+          $('.active').removeClass("active");
+          $('#change_display_completed_btn').addClass("active");
+      },
+
     })
 
     var pview = new ParentView;

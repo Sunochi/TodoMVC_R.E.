@@ -5,3 +5,7 @@ tr .delete_btn{
 tr:hover .delete_btn{
     display: block;
 }
+
+.active{
+    outline: none;
+}
