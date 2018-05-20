@@ -9,6 +9,7 @@
     <script type="text/javascript" src="js/backbone/backbone.js"></script>
     <script type="text/javascript" src="js/backbone/backbone.localStorage.js"></script>
     <link rel="stylesheet" href="css/todo_style.css">
+    <link rel="stylesheet" href="css/backbone.css">
   </head>
 
   <body>
@@ -17,7 +18,7 @@
         <thead>
             <tr>
                 <th class="check_box">
-                    <input type="checkbox" name="all_check" id="all_check" disabled/>
+                    <input type="checkbox" name="all_check" id="all_check" />
                 </th>
                 <th>
                     <input type="text" name="input_todo" id="input_todo" value="" placeholder="What needs to be done?"></input>
@@ -26,6 +27,8 @@
         </thead>
         <tbody name="todo_list" id="todo_list">
         </tbody>
+        <tfoot id="footer">
+        </tfoot>
     </table>
     <footer>
       <a href="https://umamusume.jp/" target="_blank"><img src="img/uma.png" width="200px" height="50px"></a><br>
@@ -33,33 +36,29 @@
     </footer>
 
     <script type="text/template" id="task-template">
-        <tr>
           <td>
             <input type="checkbox" class="todo_chbox" <%= done ? 'checked="checked"' : '' %> />
           </td>
           <td>
             <div class="view">
                 <label class="todo_text"><%= title %> </label>
-                <button type="button" class="todo_delete" style="display: none;"></button>
+                <button type="button" class="delete_btn" ></button>
             </div>
             <div class="edit_text">
-                <input type="text" value="<%= title %>" />
+                <input type="text" class="edit" value="<%= title %>" />
             </div>
           </td>
-        </tr>
     </script>
     <script type="text/template" id="info-template">
-        <tfoot name="tfoot" id="tfoot">
-            <tr>
-                <td colspan="2">
-                    <span id="items_left_text"><%= done %> items left</span>
-                    <button type="button" id="change_display_all_btn" class="active">All</button>
-                    <button type="button" id="change_display_active_btn">Active</button>
-                    <button type="button" id="change_display_completed_btn">Completed</button>
-                    <button type="button" id="completed_clear_btn">Clear completed</button>
-                </td>
-            </tr>
-        </tfoot>
+        <tr>
+            <td colspan="2">
+                <span id="items_left_text"><%= done %> items left</span>
+                <button type="button" id="change_display_all_btn" class="active">All</button>
+                <button type="button" id="change_display_active_btn">Active</button>
+                <button type="button" id="change_display_completed_btn">Completed</button>
+                <button type="button" id="completed_clear_btn">Clear completed</button>
+            </td>
+        </tr>
     </script>
     <script type="text/javascript" src="js/todo_backbone.js"></script>
   </body>

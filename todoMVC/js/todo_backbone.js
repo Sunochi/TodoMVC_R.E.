@@ -42,11 +42,11 @@ $(function(){
       tagName: 'tr',
       taskTemplate: _.template($('#task-template').html()),
       events: {
-        'click .todo_delete' : 'onDeleteClicked',
+        'click .delete_btn' : 'onDeleteClicked',
         'click .todo_chbox'  : 'changeDone',
         'dblclick .todo_text': 'edit',
-        'keypress .todo_edit': 'onEnterPress',
-        'blur .todo_edit'    : 'closeEdit'
+        'keypress .edit_text': 'onEnterPress',
+        'blur .edit_text'    : 'closeEdit'
       },
       initialize: function(){
           this.listenTo(this.model, 'change', this.render);
@@ -74,7 +74,7 @@ $(function(){
           this.input.focus();
       },
 
-      onEnterPress: function(){
+      onEnterPress: function(e){
           if(e.keyCode == 13) this.closeEdit();
       },
 
@@ -102,20 +102,19 @@ $(function(){
       },
       initialize: function(){
         this.input       = this.$("#input_todo");
-        this.allCheckBox = this.$("#all_check");
+        this.allCheckBox = this.$("#all_check")[0];
 
         this.listenTo(Todos, 'add', this.addOne);
         this.listenTo(Todos, 'reset', this.addAll);
         this.listenTo(Todos, 'all', this.render);
         this.listenTo(Todos, 'change:done', this.filterOne);
 
-        this.footer = this.$('footer');
+        this.footer = this.$('#footer');
         this.main   = $('#todo_list');
         Todos.fetch();
       },
 
       addOne: function(todo){
-          console.log("aaa");
           var view = new TaskView({model: todo});
           this.$("#todo_list").append(view.render().el);
       },
@@ -130,7 +129,7 @@ $(function(){
           if(Todos.length){
               this.main.show();
               this.footer.show();
-              this.footer.html(this.infoTemplate({done: done}))
+              this.footer.html(this.infoTemplate({done: remaining}))
           }else{
               this.main.hide();
               this.footer.hide();
