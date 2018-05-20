@@ -101,7 +101,7 @@ $(function(){
           // TODO footerの表示・非表示のボタンのイベントの登録
       },
       initialize: function(){
-        this.input       = this.$("new-todo");
+        this.input       = this.$("#input_todo");
         this.allCheckBox = this.$("#all_check");
 
         this.listenTo(Todos, 'add', this.addOne);
@@ -113,7 +113,9 @@ $(function(){
         this.main   = $('#todo_list');
         Todos.fetch();
       },
+
       addOne: function(todo){
+          console.log("aaa");
           var view = new TaskView({model: todo});
           this.$("#todo_list").append(view.render().el);
       },
@@ -137,11 +139,25 @@ $(function(){
           this.allCheckBox.checked = !remaining;
       },
 
-      createOnEnter
-      clearCompleted
-      toggleAllCheck
-      filterOne // TODO 表示・非表示のイベントのtrrigerの発火
+      createOnEnter: function(e){
+          if (e.keyCode != 13) return;
+          if(!this.input.val()) return;
+          Todos.create({title: this.input.val()});
+          this.input.val('')
+      },
+
+      clearCompleted: function(){
+          _.invoke(Todos.done(), 'destroy');
+          return true;
+      },
+
+      toggleAllCheck: function(){
+          var done = this.allCheckBox.checked;
+          Todos.each(function (todo){ todo.save({'done':done});});
+      },
+
+      //filterOne // TODO 表示・非表示のイベントのtrrigerの発火
     })
 
-var pview = new ParentView;
+    var pview = new ParentView;
 })
