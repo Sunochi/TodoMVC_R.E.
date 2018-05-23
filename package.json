@@ -1,0 +1,11 @@
+{
+  "name": "T.S",
+  "version": "0.0.1",
+  "repository": "Node.js-chap2",
+  "license": "ISC",
+  "description": "Chat server",
+  "dependencies": {
+    "socket.io": "2.1.1",
+    "express": "4.16.3"
+  }
+}

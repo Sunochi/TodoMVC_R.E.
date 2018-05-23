@@ -1,0 +1,11 @@
+tr .delete_btn{
+    display: none;
+}
+
+tr:hover .delete_btn{
+    display: block;
+}
+
+.active{
+    outline: none;
+}
